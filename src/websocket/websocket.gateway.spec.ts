@@ -6,7 +6,7 @@ describe('WebsocketGateway', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [WebsocketGateway],
+      providers: [WebsocketGateway], // Include AppService here
     }).compile();
 
     gateway = module.get<WebsocketGateway>(WebsocketGateway);

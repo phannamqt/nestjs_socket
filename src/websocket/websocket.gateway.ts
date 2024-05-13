@@ -1,4 +1,10 @@
-import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  WebSocketServer,
+  SubscribeMessage,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
@@ -32,7 +38,7 @@ export class WebsocketGateway
   @SubscribeMessage('joinRoom')
   async joinRoom(client: Socket, data: any): Promise<any> {
     if (data) {
-      client.join(data?.room)
+      client.join(data?.room);
       this.server.to(data?.room).emit('joined', data);
       console.log('joined');
     }
