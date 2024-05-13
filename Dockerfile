@@ -10,7 +10,7 @@ ARG CI=false
 RUN yarn build || true
 FROM node:lts
 
-ARG PORT=3000
+ARG PORT=7000
 
 RUN yarn global add pm2
 
@@ -22,8 +22,6 @@ COPY --from=dist dist /usr/src/app/dist
 COPY --from=dist node_modules /usr/src/app/node_modules
 
 COPY . /usr/src/app
-
-ENV REDIS_HOST=localhost
 
 EXPOSE $PORT
 
