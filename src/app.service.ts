@@ -12,6 +12,6 @@ export class AppService {
   sentSocket(room: string, data: any): string {
     // Send message to WebSocket clients
     this.websocketGateway.sendMessage(room, data);
-    return 'Message sent successfully';
+    return `Message sent data ${data} to ${room} successfully`;
   }
 }
