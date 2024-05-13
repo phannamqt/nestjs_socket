@@ -25,6 +25,6 @@ COPY . /usr/src/app
 
 EXPOSE $PORT
 
-CMD ["pm2-runtime", "start", "dist/src/main.js", "-i", "5"]
+CMD ["pm2-runtime", "start", "dist/main.js", "-i", "5"]
 
 #  CMD ["tail", "-f", "/dev/null"]
