@@ -20,7 +20,6 @@ WORKDIR /usr/src/app
 
 COPY --from=dist dist /usr/src/app/dist
 COPY --from=dist node_modules /usr/src/app/node_modules
-COPY --from=dist .env /usr/src/app/dist/src
 
 COPY . /usr/src/app
 
