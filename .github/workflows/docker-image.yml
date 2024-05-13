@@ -1,0 +1,61 @@
+name: Docker Image Build and Deploy on Release Merge
+
+on:
+  push:
+    branches: [ master ]
+    
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run the tests and generate coverage report
+        run: yarn test -- --coverage
+
+      - name: Build and Push Docker Image
+        uses: mr-smithers-excellent/docker-build-push@v4
+        with:
+          image: ${{ secrets.DOCKER_USERNAME }}/nestjs-socket
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          tags: latest, v1.0.0
+
+      - name: Build & push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          image: ${{ secrets.DOCKER_USERNAME }}/nestjs-socket
+          tags: v1, latest
+          dockerfile: Dockerfile
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'bash -s' << 'EOF'
+              docker pull ${{ secrets.DOCKER_USERNAME }}/nestjs-socket:latest
+              docker stop nestjs-socket || true
+              docker rm nestjs-socket || true
+              docker run -d --name nestjs-socket -p 3004:8000 ${{ secrets.DOCKER_USERNAME }}/nestjs-socket
+            EOF
