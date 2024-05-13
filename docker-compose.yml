@@ -5,7 +5,7 @@ volumes:
 
 services:
   app:
-    container_name: nestjs-scoket
+    container_name: nestjs-socket
     restart: always
     build: .
     network_mode: host
