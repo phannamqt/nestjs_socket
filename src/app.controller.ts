@@ -31,7 +31,7 @@ export class AppController {
     return { data };
   }
 
-  @Delete('/log')
+  @Get('/reset-log')
   resetLogs(): string {
     const data = this.appService.resetLogs();
     return JSON.stringify(data);
