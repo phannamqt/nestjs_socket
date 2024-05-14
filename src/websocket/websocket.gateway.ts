@@ -30,31 +30,37 @@ export class WebsocketGateway
     console.log('WebSocket gateway initialized');
   }
 
-  sendMessage(room: string, data: any) {
-    // Send message to all clients in the specified room
-    this.server.to(room).emit('message', data);
+  async sendMessage(room: string, data: any) {
+    console.log(`Attempting to send message to room ${room} with data:`, data);
+    const clients = await this.server.in(room).fetchSockets();
+    if (clients.length > 0) {
+      this.server.to(room).emit('message', data);
+      console.log(`Message sent to room ${room}`);
+    } else {
+      console.log(`Room ${room} does not exist or has no clients`);
+    }
   }
 
   @SubscribeMessage('joinRoom')
- async joinRoom(client: Socket, data: any): Promise<any> {
-  if (data) {
-    console.log(
-      `Client ${client.id} is attempting to join room ${data?.room} with data:`,
-      data,
-    );
-    try {
-      client.join(data?.room);
+  async joinRoom(client: Socket, data: any): Promise<any> {
+    if (data) {
       console.log(
-        `Client ${client.id} successfully joined room ${data?.room}`,
+        `Client ${client.id} is attempting to join room ${data?.room} with data:`,
+        data,
       );
-      this.server.to(data?.room).emit('joined', data);
-      console.log('Emitted joined event to room', data?.room);
-    } catch (error) {
-      console.error(
-        `Client ${client.id} failed to join room ${data?.room}:`,
-        error,
-      );
+      try {
+        client.join(data?.room);
+        console.log(
+          `Client ${client.id} successfully joined room ${data?.room}`,
+        );
+        this.server.to(data?.room).emit('joined', data);
+        console.log('Emitted joined event to room', data?.room);
+      } catch (error) {
+        console.error(
+          `Client ${client.id} failed to join room ${data?.room}:`,
+          error,
+        );
+      }
     }
   }
-}
 }
