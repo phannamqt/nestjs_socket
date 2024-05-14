@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Render } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -10,8 +10,17 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('/socket/:room/:data')
-  getSocket(@Param('room') room: string, @Param('data') data: string): string {
-    return this.appService.sentSocket(room, data);
+  @Get('/client/:roomId/:data')
+  @Render('index')
+  showClient(@Param('roomId') roomId: string, @Param('data') data: string) {
+    return { roomId, data };
+  }
+
+  @Get('/socket/:roomId/:data')
+  getSocket(
+    @Param('roomId') roomId: string,
+    @Param('data') data: string,
+  ): string {
+    return this.appService.sentSocket(roomId, data);
   }
 }

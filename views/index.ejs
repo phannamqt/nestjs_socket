@@ -6,7 +6,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function() {
-            var token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgsIm5hbWUiOiJUQlAgLSBQaGFuIE5hbSAtIFAuIENOVFQiLCJpYXQiOjE3MTUzMjg3MjN9.IY4a9Ie1tyZ3jEEHXx7yl2rLQv0-cgGHj632s2zU1uk"
+
             var socket = io('http://51.79.248.73:3004', {
                 transports: [ 'websocket' ]
             });
@@ -14,8 +14,8 @@
             socket.on('connect', function() {
                 socket.emit('my_event', {data: 'I\'m connected!'});
                 socket?.emit('joinRoom', {
-                    room: "123",
-                    data: "Nam macbook"
+                    room: `<%=roomId%>`,
+                    data: `<%=data%>`
                 })
             });
 
@@ -43,6 +43,8 @@
 <body>
     <h1>SocketIO Test</h1>
     <p>
+        Room Id: <b><%=roomId%></b><br>
+        Data: <b><%=data%></b><br>
         Async mode is: <b>{{ async_mode }}</b><br>
         Current transport is: <b><span id="transport"></span></b><br>
         Average ping/pong latency: <b><span id="ping-pong"></span>ms</b>
