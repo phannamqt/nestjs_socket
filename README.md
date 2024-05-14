@@ -24,6 +24,12 @@
 
 ## Description
 
+## Run docker
+```bash
+cd nestjs_socket
+
+docker-compose build && docker-compose down && docker-compose up -d
+```
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
