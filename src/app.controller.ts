@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Render } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Render } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -22,5 +22,18 @@ export class AppController {
     @Param('data') data: string,
   ): string {
     return this.appService.sentSocket(roomId, data);
+  }
+
+  @Get('/logs')
+  @Render('logs')
+  async getLogs() {
+    const data = await this.appService.getLogs();
+    return { data };
+  }
+
+  @Delete('/log')
+  resetLogs(): string {
+    const data = this.appService.resetLogs();
+    return JSON.stringify(data);
   }
 }

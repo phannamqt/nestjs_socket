@@ -14,4 +14,14 @@ export class AppService {
     this.websocketGateway.sendMessage(room, data);
     return `Message sent data ${data} to ${room} successfully`;
   }
+
+  getLogs(): any {
+    const data = this.websocketGateway.getLogs();
+    return data;
+  }
+
+  resetLogs(): any {
+    this.websocketGateway.resetLogs();
+    return { data: 'Reset logs' };
+  }
 }
