@@ -36,11 +36,25 @@ export class WebsocketGateway
   }
 
   @SubscribeMessage('joinRoom')
-  async joinRoom(client: Socket, data: any): Promise<any> {
-    if (data) {
+ async joinRoom(client: Socket, data: any): Promise<any> {
+  if (data) {
+    console.log(
+      `Client ${client.id} is attempting to join room ${data?.room} with data:`,
+      data,
+    );
+    try {
       client.join(data?.room);
+      console.log(
+        `Client ${client.id} successfully joined room ${data?.room}`,
+      );
       this.server.to(data?.room).emit('joined', data);
-      console.log('joined');
+      console.log('Emitted joined event to room', data?.room);
+    } catch (error) {
+      console.error(
+        `Client ${client.id} failed to join room ${data?.room}:`,
+        error,
+      );
     }
   }
+}
 }
