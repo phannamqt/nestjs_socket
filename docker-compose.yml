@@ -14,3 +14,5 @@ services:
       - TZ=Asia/Ho_Chi_Minh
     ports:
       - "3004:8000"
+  redis:
+    image: "redis:alpine"

@@ -7,6 +7,8 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
+import { createAdapter } from 'socket.io-redis';
+import { createClient } from 'redis';
 
 @WebSocketGateway({
   cors: {
@@ -31,14 +33,18 @@ export class WebsocketGateway
   }
 
   afterInit() {
+    const pubClient = createClient({ host: 'localhost', port: 6379 });
+    const subClient = pubClient.duplicate();
+    this.server.adapter(createAdapter({ pubClient, subClient }));
     console.log('WebSocket gateway initialized');
     this.log('WebSocket gateway initialized');
   }
 
   async sendMessage(room: string, data: any) {
     this.log(`Attempting to send message to room ${room} with data: ${data}`);
-    const clients = await this.server.in(room).fetchSockets();
-    if (clients.length > 0) {
+    const roomExists = await this.server.in(room).allSockets();
+    if (roomExists.size > 0) {
+      const clients = await this.server.in(room).fetchSockets();
       this.server.to(room).emit('message', data);
       this.log(`Message sent to room ${room}: ${data}`);
     } else {
