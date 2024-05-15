@@ -8,6 +8,8 @@ export declare class AppController {
         data: string;
     };
     getSocket(roomId: string, data: string): string;
-    getLogs(): unknown;
+    getLogs(): Promise<{
+        data: any;
+    }>;
     resetLogs(): string;
 }
