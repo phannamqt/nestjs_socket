@@ -31,8 +31,8 @@ export class WebsocketGateway
   }
 
   afterInit() {
-    console.log('WebSocket gateway initialized');
-    this.log('WebSocket gateway initialized');
+    console.log('WebSocket gateway initialized.');
+    this.log('WebSocket gateway initialized.');
   }
 
   async sendMessage(room: string, data: any) {
