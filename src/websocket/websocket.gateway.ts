@@ -53,8 +53,8 @@ export class WebsocketGateway
       try {
         client.join(data?.room);
         this.log(`Client ${client.id} successfully joined room ${data?.room} with data: ${JSON.stringify(data)}`);
-        this.server.to(data?.room).emit('joined', data);
-        this.log(`Emitted joined event to room ${data?.room} with data: ${data}`);
+        this.server.to(data?.room).emit('joined', `Client ${client.id} successfully joined room ${data?.room} with data: ${JSON.stringify(data)}`);
+        this.log(`Emitted joined event to room ${data?.room} with data: ${JSON.stringify(data)}`);
       } catch (error) {
         this.log(`Client ${client.id} failed to join room ${data?.room}: ${error}`);
       }
