@@ -9,7 +9,6 @@ export declare class WebsocketGateway implements OnGatewayConnection, OnGatewayD
     handleDisconnect(client: Socket): void;
     afterInit(): void;
     sendMessage(room: string, data: any): Promise<void>;
-    joinRoom(client: Socket, data: any): Promise<any>;
     log(message: string): void;
     getLogs(): string[];
     resetLogs(): any[];

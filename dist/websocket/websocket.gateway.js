@@ -13,8 +13,6 @@ exports.WebsocketGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
 const common_1 = require("@nestjs/common");
 const socket_io_1 = require("socket.io");
-const socket_io_redis_1 = require("socket.io-redis");
-const redis_1 = require("redis");
 let WebsocketGateway = class WebsocketGateway {
     constructor() {
         this.logs = [];
@@ -27,11 +25,8 @@ let WebsocketGateway = class WebsocketGateway {
         this.log('Client disconnected:' + client.id);
     }
     afterInit() {
-        const pubClient = (0, redis_1.createClient)({ host: 'localhost', port: 6379 });
-        const subClient = pubClient.duplicate();
-        this.server.adapter((0, socket_io_redis_1.createAdapter)({ pubClient, subClient }));
-        console.log('WebSocket gateway initialized');
-        this.log('WebSocket gateway initialized');
+        console.log('WebSocket gateway initialized.');
+        this.log('WebSocket gateway initialized.');
     }
     async sendMessage(room, data) {
         this.log(`Attempting to send message to room ${room} with data: ${data}`);
@@ -43,20 +38,6 @@ let WebsocketGateway = class WebsocketGateway {
         }
         else {
             this.log(`Room ${room} does not exist or has no clients, with data: ${data}`);
-        }
-    }
-    async joinRoom(client, data) {
-        if (data) {
-            this.log(`Client ${client.id} is attempting to join room ${data?.room} with data: ${JSON.stringify(data)}`);
-            try {
-                client.join(data?.room);
-                this.log(`Client ${client.id} successfully joined room ${data?.room} with data: ${JSON.stringify(data)}`);
-                this.server.to(data?.room).emit('joined', `Client ${client.id} successfully joined room ${data?.room} with data: ${JSON.stringify(data)}`);
-                this.log(`Emitted client ${client.id} joined event to room ${data?.room} with data: ${JSON.stringify(data)}`);
-            }
-            catch (error) {
-                this.log(`Client ${client.id} failed to join room ${data?.room}: ${error}`);
-            }
         }
     }
     log(message) {
@@ -81,12 +62,6 @@ __decorate([
     (0, websockets_1.WebSocketServer)(),
     __metadata("design:type", socket_io_1.Server)
 ], WebsocketGateway.prototype, "server", void 0);
-__decorate([
-    (0, websockets_1.SubscribeMessage)('joinRoom'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
-    __metadata("design:returntype", Promise)
-], WebsocketGateway.prototype, "joinRoom", null);
 exports.WebsocketGateway = WebsocketGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {

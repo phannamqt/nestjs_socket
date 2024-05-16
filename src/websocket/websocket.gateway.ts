@@ -59,6 +59,9 @@ export class WebsocketGateway
       } catch (error) {
         this.log(`Client ${client.id} failed to join room ${data?.room}: ${error}`);
       }
+    }else {
+      this.log(`Client ${client.id} failed to join room ${data?.room} with data null`);
+
     }
   }
 
