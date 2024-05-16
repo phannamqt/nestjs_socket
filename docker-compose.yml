@@ -8,7 +8,7 @@ services:
     container_name: nestjs-socket
     restart: always
     build: .
-    # network_mode: host
+    network_mode: host
     environment:
       - PORT=3004
       - TZ=Asia/Ho_Chi_Minh
