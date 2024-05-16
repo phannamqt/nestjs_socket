@@ -57,5 +57,5 @@ jobs:
               docker pull ${{ secrets.DOCKER_USERNAME }}/nestjs-socket:latest
               docker stop nestjs-socket || true
               docker rm nestjs-socket || true
-              docker run -d --name nestjs-socket -p 3004:8000 ${{ secrets.DOCKER_USERNAME }}/nestjs-socket
+              docker run -d --name nestjs-socket -p 3004:8000 -p 6379:6379 ${{ secrets.DOCKER_USERNAME }}/nestjs-socket
             EOF
