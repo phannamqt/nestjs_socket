@@ -3,13 +3,15 @@ import { createAdapter } from 'socket.io-redis';
 import Redis from 'ioredis';
 
 export class RedisIoAdapter extends IoAdapter {
-  createIOServer(port: number, options?: any): any {
-    const server = super.createIOServer(port, options);
+  constructor(private readonly server: any) {
+    super();
+  }
+
+  createIOServer(options?: any): any {
+    const ioServer = super.createIOServer(this.server, options);
     const pubClient = new Redis({ host: 'redis', port: 6379 });
     const subClient = pubClient.duplicate();
-
-    server.adapter(createAdapter({ pubClient, subClient }));
-
-    return server;
+    ioServer.adapter(createAdapter({ pubClient, subClient }));
+    return ioServer;
   }
 }
