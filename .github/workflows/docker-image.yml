@@ -30,7 +30,7 @@ jobs:
 
       - name: Wait for Redis to be ready
         run: |
-          until nc -z -v -w30 redis 6379
+          until nc -z -v -w30 localhost 6379
           do
             echo "Waiting for Redis service..."
             sleep 1
@@ -38,7 +38,7 @@ jobs:
 
       - name: Run the tests and generate coverage report
         env:
-          REDIS_HOST: redis
+          REDIS_HOST: localhost
           REDIS_PORT: 6379
         run: yarn test -- --coverage
 
