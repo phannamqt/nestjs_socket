@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { WebsocketGateway } from './websocket/websocket.gateway';
+import { SocketGateway } from './socket/socket.gateway';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly websocketGateway: WebsocketGateway) {}
 
+  constructor(private readonly websocketGateway: SocketGateway) {}
   getHello(): string {
     return 'Hello World!';
   }

@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Render } from '@nestjs/common';
+import { Controller, Get, Param, Render } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -7,7 +7,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    return 'NestJS Socket Redis' + process.env.NODE_INSTANCE_ID;
   }
 
   @Get('/client/:roomId/:data')

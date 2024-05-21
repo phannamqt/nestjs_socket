@@ -1,7 +1,7 @@
 version: "3"
 
 volumes:
-  db: # mount it internally instead of a folder. it avoids file lock problems
+  db:
 
 services:
   app:
