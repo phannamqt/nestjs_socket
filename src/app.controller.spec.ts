@@ -1,12 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SocketModule } from './socket/socket.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { RedisOptions } from './app.module';
 
 describe('AppController', () => {
   let appController: AppController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
+      imports: [SocketModule, CacheModule.registerAsync(RedisOptions)], // add SocketModule to the imports array
       controllers: [AppController],
       providers: [AppService],
     }).compile();
