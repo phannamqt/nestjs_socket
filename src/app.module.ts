@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { SocketModule } from './socket/socket.module';
 import { CacheModule, CacheModuleAsyncOptions } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
-import { UserModule } from './modules/user/user.module';
 
 export const RedisOptions: CacheModuleAsyncOptions = {
   isGlobal: true,
@@ -20,7 +19,7 @@ export const RedisOptions: CacheModuleAsyncOptions = {
 };
 
 @Module({
-  imports: [SocketModule, CacheModule.registerAsync(RedisOptions), UserModule],
+  imports: [SocketModule, CacheModule.registerAsync(RedisOptions)],
   controllers: [AppController],
   providers: [AppService],
 })

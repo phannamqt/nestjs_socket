@@ -7,7 +7,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return 'NestJS Socket Redis' + process.env.NODE_INSTANCE_ID;
+    return this.appService.getHello();
   }
 
   @Get('/client/:roomId/:data')
