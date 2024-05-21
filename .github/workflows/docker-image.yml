@@ -28,14 +28,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Wait for Redis to be ready
-        run: |
-          until nc -z -v -w30 localhost 6379
-          do
-            echo "Waiting for Redis service..."
-            sleep 1
-          done
-
       - name: Run the tests and generate coverage report
         env:
           REDIS_HOST: localhost
