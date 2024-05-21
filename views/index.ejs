@@ -12,8 +12,9 @@
             });
 
             socket.on('connect', function() {
-                socket.emit('my_event', {data: 'I\'m connected!'});
-                socket?.emit('joinRoom', {
+                console.log("connected")
+
+                socket.emit('joinRoom', {
                     room: `<%=roomId%>`,
                     data: `<%=data%>`
                 })
