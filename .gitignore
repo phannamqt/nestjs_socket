@@ -1,2 +1,4 @@
 node_modules/
-converage/
+converage/node_modules/
+dist/
+coverage/

@@ -8,8 +8,10 @@ import { redisStore } from 'cache-manager-redis-store';
 export const RedisOptions: CacheModuleAsyncOptions = {
   isGlobal: true,
   useFactory: async () => {
+    const REDIS_HOST = process.env.REDIS_HOST || 'redis';
+    const REDIS_PORT = process.env.REDIS_PORT || 6379;
     const store = await redisStore({
-      url: `redis://redis:6379`,
+      url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
     });
     return {
       store: () => store,
