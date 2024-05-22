@@ -2,15 +2,29 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SocketModule } from './socket/socket.module';
-import { CacheModule } from '@nestjs/cache-manager';
-import { RedisOptions } from './app.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { RedisModule } from '@songkeys/nestjs-redis';
 
 describe('AppController', () => {
   let appController: AppController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [SocketModule, CacheModule.registerAsync(RedisOptions)], // add SocketModule to the imports array
+      imports: [SocketModule, 
+        ConfigModule.forRoot({
+          isGlobal: true,
+        }),
+        RedisModule.forRootAsync({
+          imports: [ConfigModule],
+          useFactory: async (configService: ConfigService) => ({
+            config: {
+              host: 'redis',
+              port: 6379
+            },
+          }),
+          inject: [ConfigService],
+        }),
+      ], // add SocketModule to the imports array
       controllers: [AppController],
       providers: [AppService],
     }).compile();
