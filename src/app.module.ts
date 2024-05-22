@@ -10,7 +10,7 @@ import { BackendModule } from './modules/backend/backend.module';
 export const RedisOptions: CacheModuleAsyncOptions = {
   isGlobal: true,
   useFactory: async () => {
-    const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
+    const REDIS_HOST = process.env.REDIS_HOST || 'redis';
     const REDIS_PORT = process.env.REDIS_PORT || 6379;
     const store = await redisStore({
       url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
@@ -30,7 +30,7 @@ export const RedisOptions: CacheModuleAsyncOptions = {
     RedisModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
-        const host = 'localhost'
+        const host = 'redis'
         const port = 6379
         return {
           config: {

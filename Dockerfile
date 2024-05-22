@@ -10,7 +10,7 @@ ARG CI=false
 RUN yarn build || true
 FROM node:lts
 
-ARG PORT=8000
+ARG PORT=3004
 
 RUN yarn global add pm2
 
