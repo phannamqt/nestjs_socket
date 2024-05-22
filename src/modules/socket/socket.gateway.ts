@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { DEFAULT_REDIS_NAMESPACE, InjectRedis } from '@liaoliaots/nestjs-redis';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Logger } from '@nestjs/common';
 import {
@@ -10,13 +11,15 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import Redis from 'ioredis';
 import { Server, Socket } from 'socket.io';
-import { SocketPayload } from './socket.constant';
-
+ 
 @WebSocketGateway()
-export class SocketGateway
+export class SocketGateway {
+  constructor(
+    @InjectRedis(DEFAULT_REDIS_NAMESPACE) private redis: Redis,
+  ) {}
   // implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
   @WebSocketServer()
   server: Server;
   private logs: string[] = [];

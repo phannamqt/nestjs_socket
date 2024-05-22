@@ -1,25 +1,26 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { SocketModule } from './socket/socket.module';
+import { Module } from '@nestjs/common'; 
 import { CacheModule, CacheModuleAsyncOptions } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
+import { SocketModule } from './modules/socket/socket.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RedisModule } from '@songkeys/nestjs-redis';
-// export const RedisOptions: CacheModuleAsyncOptions = {
-//   isGlobal: true,
-//   useFactory: async () => {
-//     const REDIS_HOST = process.env.REDIS_HOST || 'redis';
-//     const REDIS_PORT = process.env.REDIS_PORT || 6379;
-//     const store = await redisStore({
-//       url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
-//     });
-//     return {
-//       store: () => store,
-//       ttl: 86400000, // 1 Day = 24 * 60 * 60 * 1000 = 86,400,000 milliseconds.
-//     };
-//   },
-// };
+import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { BackendController } from './modules/backend/backend.controller';
+import { BackendModule } from './modules/backend/backend.module';
+
+export const RedisOptions: CacheModuleAsyncOptions = {
+  isGlobal: true,
+  useFactory: async () => {
+    const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
+    const REDIS_PORT = process.env.REDIS_PORT || 6379;
+    const store = await redisStore({
+      url: `redis://${REDIS_HOST}:${REDIS_PORT}`,
+    });
+    return {
+      store: () => store,
+      ttl: 86400000, // 1 Day = 24 * 60 * 60 * 1000 = 86,400,000 milliseconds.
+    };
+  },
+};
 
 @Module({
   imports: [SocketModule, 
@@ -29,7 +30,7 @@ import { RedisModule } from '@songkeys/nestjs-redis';
     RedisModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
-        const host = 'redis'
+        const host = 'localhost'
         const port = 6379
         return {
           config: {
@@ -39,9 +40,11 @@ import { RedisModule } from '@songkeys/nestjs-redis';
         };
       },
       inject: [ConfigService],
-    }),
+    }), CacheModule.registerAsync(RedisOptions),
+  
+  BackendModule,
+  SocketModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [BackendController],
 })
 export class AppModule {}

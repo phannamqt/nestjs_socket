@@ -1,12 +1,11 @@
 import { Controller, Get, Param, Render } from '@nestjs/common';
-import { AppService } from './app.service';
-import { DEFAULT_REDIS_NAMESPACE, InjectRedis } from '@songkeys/nestjs-redis';
 import Redis from 'ioredis';
-@Controller()
-export class AppController {
+import { BackendService } from './backend.service';
+
+@Controller('backend')
+export class BackendController {
   constructor(
-    private readonly appService: AppService,
-    @InjectRedis(DEFAULT_REDIS_NAMESPACE) private redis: Redis,
+    private readonly appService: BackendService,
   ) {}
 
   @Get()
@@ -17,10 +16,8 @@ export class AppController {
   @Get('/client/:roomId/:data')
   @Render('index')
   async showClient(@Param('roomId') roomId: string, @Param('data') data: string) {
-    const roomIdSocket = await this.redis.get('roomId')
-    const dataSocket = await this.redis.get('data')
     
-    return { roomId:roomIdSocket, data:dataSocket };
+    return { roomId:roomId, data:data };
   }
 
   @Get('/socket/:roomId/:data')
@@ -28,8 +25,6 @@ export class AppController {
     @Param('roomId') roomId: string,
     @Param('data') data: string,
   ) {
-    await this.redis.set('roomId',roomId)
-    await this.redis.set('data',data)
     return this.appService.sentSocket(roomId, data);
   }
 

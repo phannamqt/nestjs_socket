@@ -1,7 +1,7 @@
-# version: "3"
+version: "3"
 
 volumes:
-  db:
+  db: 
 
 services:
   app:
@@ -10,8 +10,6 @@ services:
     environment:
       - PORT=3004
       - TZ=Asia/Ho_Chi_Minh
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
     ports:
       - "3004:8000"
     depends_on:

@@ -9,14 +9,14 @@ async function bootstrap() {
   process.env.NODE_INSTANCE_ID = crypto.randomBytes(16).toString('hex');
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  // const redisIoAdapter = new RedisIoAdapter(app);
-  // await redisIoAdapter.connectToRedis();
+  const redisIoAdapter = new RedisIoAdapter(app);
+  await redisIoAdapter.connectToRedis();
   // Set the directory where the views are stored
   app.setBaseViewsDir(path.join(__dirname, '..', 'views'));
   // Set the view engine to ejs
   app.setViewEngine('ejs');
-  // app.useWebSocketAdapter(redisIoAdapter);
+  app.useWebSocketAdapter(redisIoAdapter);
 
-  await app.listen(8000);
+  await app.listen(3004);
 }
 bootstrap();

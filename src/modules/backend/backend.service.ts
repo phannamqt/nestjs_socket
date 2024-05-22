@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { SocketGateway } from './socket/socket.gateway';
+import { SocketGateway } from '../socket/socket.gateway';
 
 @Injectable()
-export class AppService {
+export class BackendService {
+  constructor(private readonly websocketGateway: SocketGateway) {} // Inject SocketGateway
 
-  constructor(private readonly websocketGateway: SocketGateway) {}
   getHello(): string {
     return 'Hello World!';
   }
