@@ -1,20 +1,32 @@
 version: "3"
 
 volumes:
-  db: 
+  db:
+  redis-data:
 
 services:
   app:
     container_name: nestjs-socket
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.nestjs
     environment:
       - PORT=3004
       - TZ=Asia/Ho_Chi_Minh
     ports:
-      - "3004:3004"
+      - "3004:3004"  # Map port 3004 of the host to port 3004 of the container
     depends_on:
       - redis
+    volumes:
+      - ./app:/app
+
   redis:
-    image: "redis:alpine"
+    container_name: redis
+    build:
+      context: .
+      dockerfile: Dockerfile.redis
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "6379:6379"  # Map port 6379 of the host to port 6379 of the container
