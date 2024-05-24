@@ -1,22 +1,38 @@
 import { NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
+import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { RedisIoAdapter } from './redis-io.adapter';
 import * as crypto from 'crypto';
-import * as path from 'path';
+import {join} from 'path';
+import { contentParser } from 'fastify-multer';
 
 async function bootstrap() {
   process.env.NODE_INSTANCE_ID = crypto.randomBytes(16).toString('hex');
 
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter({
+      trustProxy: true,  
+      maxParamLength: 1000,
+    }),
+  );
+
   const redisIoAdapter = new RedisIoAdapter(app);
   await redisIoAdapter.connectToRedis();
-  // Set the directory where the views are stored
-  app.setBaseViewsDir(path.join(__dirname, '..', 'views'));
-  // Set the view engine to ejs
-  app.setViewEngine('ejs');
-  app.useWebSocketAdapter(redisIoAdapter);
 
-  await app.listen(3004);
+  app.setViewEngine({
+    engine: {
+      ejs: require('ejs'),
+    },
+    templates: join(__dirname, '../', 'views'),
+    options: {
+      async: true,
+    },
+  });
+
+  app.useWebSocketAdapter(redisIoAdapter);
+  await app.register(contentParser);
+  await app.listen(3004,'0.0.0.0');
 }
-bootstrap();
+
+ bootstrap();
